@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>GPA Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    #box {
+      background-color: #fff;
+      width: 850px;
+      border-radius: 12px;
+      border: 2px solid #ccc;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      padding: 25px 30px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    button, a {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #3498db;
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      margin: 10px 5px;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    button:hover, a:hover {
+      background-color: #2980b9;
+    }
+
+    #Courses li, #terms li {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 200px; /* زيادة عرض المربعات */
+    }
+
+    .input-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      text-align: center;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .add-btn-container {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    #calc-btn {
+      width: 50%;
+      font-size: 18px;
+      padding: 14px 0;
+      margin-top: 20px;
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    <h1>GPA Calculator App</h1>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+      <button onclick="showCurrent()">Current Semester</button>
+      <button onclick="showLast()">Last Semester(s)</button>
+    </div>
+
+    <!-- Current Semester -->
+    <div id="current">
+      <ul id="Courses">
+        <li>
+          <div class="input-group">
+            <label>Course</label>
+            <input type="text" placeholder="Course">
+          </div>
+          <div class="input-group">
+            <label>Credit</label>
+            <input type="number" placeholder="Credit" required>
+          </div>
+          <div class="input-group">
+            <label>Grade</label>
+            <select required>
+              <option value="4">A+</option>
+              <option value="4">A</option>
+              <option value="3.7">A-</option>
+              <option value="3.3">B+</option>
+              <option value="3">B</option>
+              <option value="2.7">B-</option>
+              <option value="2.3">C+</option>
+              <option value="2">C</option>
+              <option value="1.7">C-</option>
+              <option value="1.3">D+</option>
+              <option value="1">D</option>
+              <option value="0">F</option>
+            </select>
+          </div>
+        </li>
+      </ul>
+      <div class="add-btn-container">
+        <a href="#" onclick="addCourse()">+ Add Course</a>
+      </div>
+    </div>
+
+    <!-- Last Semester(s) -->
+    <div id="last" style="display: none;">
+      <ul id="terms">
+        <li>
+          <div class="input-group">
+            <label>Hours</label>
+            <input type="number" placeholder="Hours" required>
+          </div>
+          <div class="input-group">
+            <label>Grade</label>
+            <input type="number" placeholder="Grade" required>
+          </div>
+        </li>
+      </ul>
+      <div class="add-btn-container">
+        <a href="#" onclick="addTerm()">+ Add Term</a>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <button id="calc-btn" onclick="calc()">Calculate</button>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function addCourse() {
+      let li = document.createElement("li");
+      li.innerHTML = `
+        <div class="input-group">
+          <label>Course</label>
+          <input type="text" placeholder="Course">
+        </div>
+        <div class="input-group">
+          <label>Credit</label>
+          <input type="number" placeholder="Credit" required>
+        </div>
+        <div class="input-group">
+          <label>Grade</label>
+          <select required>
+            <option value="4">A+</option>
+            <option value="4">A</option>
+            <option value="3.7">A-</option>
+            <option value="3.3">B+</option>
+            <option value="3">B</option>
+            <option value="2.7">B-</option>
+            <option value="2.3">C+</option>
+            <option value="2">C</option>
+            <option value="1.7">C-</option>
+            <option value="1.3">D+</option>
+            <option value="1">D</option>
+            <option value="0">F</option>
+          </select>
+        </div>
+      `;
+      document.getElementById("Courses").appendChild(li);
+    }
+
+    function addTerm() {
+      let li = document.createElement("li");
+      li.innerHTML = `
+        <div class="input-group">
+          <label>Hours</label>
+          <input type="number" placeholder="Hours" required>
+        </div>
+        <div class="input-group">
+          <label>Grade</label>
+          <input type="number" placeholder="Grade" required>
+        </div>
+      `;
+      document.getElementById("terms").appendChild(li);
+    }
+
+    function showCurrent() {
+      document.getElementById("current").style.display = "block";
+      document.getElementById("last").style.display = "none";
+      document.getElementById("result").innerHTML = "";
+    }
+
+    function showLast() {
+      document.getElementById("current").style.display = "none";
+      document.getElementById("last").style.display = "block";
+      document.getElementById("result").innerHTML = "";
+    }
+
+    function calc() {
+      const courses = document.getElementById("Courses").children;
+      const terms = document.getElementById("terms").children;
+
+      let termPoints = 0;
+      let termHours = 0;
+
+      for (let li of courses) {
+        const credit = parseFloat(li.querySelector('input[placeholder="Credit"]').value) || 0;
+        const grade = parseFloat(li.querySelector('select').value) || 0;
+
+        termPoints += credit * grade;
+        termHours += credit;
+      }
+
+      const currentGPA = termHours ? (termPoints / termHours).toFixed(2) : 0;
+
+      let totalPoints = termPoints;
+      let totalHours = termHours;
+
+      for (let li of terms) {
+        const hours = parseFloat(li.querySelector('input[placeholder="Hours"]').value) || 0;
+        const grade = parseFloat(li.querySelector('input[placeholder="Grade"]').value) || 0;
+
+        totalPoints += hours * grade;
+        totalHours += hours;
+      }
+
+      const CGPA = totalHours ? (totalPoints / totalHours).toFixed(2) : 0;
+
+      document.getElementById("result").innerHTML = `
+        Current Term GPA: <strong>${currentGPA}</strong><br>
+        Cumulative GPA: <strong>${CGPA}</strong>
+      `;
+    }
+  </script>
+</body>
+</html>
